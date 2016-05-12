@@ -1,0 +1,30 @@
+---
+public: false
+name: scratch
+description: 
+imagePath: 
+author: 
+organization: 
+organizationUrl: 
+version: 0.1.0
+updateDate: 5/1/2016
+defaultPlaybook: playbook.yml
+tags:
+  - OSS
+
+fields:
+- name: dc
+  displayName: Datacenter
+  type: datacenters  
+  required: true
+- name: group
+  displayName: Group
+  parent: dc
+  required: true
+  type: groups
+- name: network_id
+  displayName: Network
+  parent: dc
+  required: true
+  type: networks
+

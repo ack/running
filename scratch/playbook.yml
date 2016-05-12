@@ -1,0 +1,5 @@
+---
+- name: infra | setup
+  hosts: localhost
+  roles:
+  - { role: server, srv_name: UBU, srv_template: ubuntu-14-64 }
