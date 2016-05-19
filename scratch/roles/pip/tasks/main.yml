@@ -1,0 +1,4 @@
+---
+- name: windows | install python and pip 
+  script: templates/python-install.ps1
+  when: ansible_os_family in ['Windows']

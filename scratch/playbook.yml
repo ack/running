@@ -1,5 +1,13 @@
 ---
-- name: infra | setup
-  hosts: localhost
-  roles:
-  - { role: server, srv_name: UBU, srv_template: ubuntu-14-64 }
+- name: install s3cmd
+  hosts: ca1afvor03
+  roles: 
+  - pip
+
+  #tasks:
+  #- name: windows | install s3cmd from pip 
+  #  command: \Python27\Scripts\pip.exe install s3cmd
+  #  when: ansible_os_family in ['Windows']
+  #- name: windows | configure s3cmd
+  #  template: src=s3cfg dest=\\users\\administrator\\AppData\\Roaming\\s3cmd.ini
+  #  when: ansible_os_family in ['Windows']
