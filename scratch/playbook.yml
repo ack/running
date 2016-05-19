@@ -1,13 +1,40 @@
 ---
-- name: install s3cmd
-  hosts: ca1afvor03
+- name: load inv
+  hosts: localhost
+  vars:
+    server_id: ca1afvor03
+  tasks:
+  - name: resolve existing server
+    clc_server_fact:
+      server_id: "{{ item }}"
+      credentials: true
+    register: fact
+    with_items: server_id
+
+  - name: inventory
+    add_host:
+      groups=servers
+      name={{ item.server.name }}
+      ansible_ssh_host={{ item.server.details.ipAddresses[0]['internal'] }}
+      ansible_ssh_user={{ item.server.credentials.userName }}
+      ansible_ssh_pass={{ item.server.credentials.password }}
+      ansible_connection={{ 'winrm' if 'Windows' in item.server.osType else 'ssh' }}
+      ansible_winrm_server_cert_validation=ignore
+      publicip={{ item.server.details.ipAddresses[-1]['public'] | d('') }}
+    with_items: fact.results
+    
+  
+- name: install pip
+  hosts: servers
   roles: 
   - pip
 
-  #tasks:
-  #- name: windows | install s3cmd from pip 
-  #  command: \Python27\Scripts\pip.exe install s3cmd
-  #  when: ansible_os_family in ['Windows']
-  #- name: windows | configure s3cmd
-  #  template: src=s3cfg dest=\\users\\administrator\\AppData\\Roaming\\s3cmd.ini
-  #  when: ansible_os_family in ['Windows']
+- name: pip s3cmd
+  hosts: servers
+  tasks:
+  - name: windows | install s3cmd from pip 
+    command: \Python27\Scripts\pip.exe install s3cmd
+    when: ansible_os_family in ['Windows']
+  - name: windows | configure s3cmd
+    template: src=s3cfg dest=\\users\\administrator\\AppData\\Roaming\\s3cmd.ini
+    when: ansible_os_family in ['Windows']
