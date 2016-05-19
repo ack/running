@@ -1,6 +1,7 @@
 ---
 - name: load inv
   hosts: localhost
+  gather_facts: false
   vars:
     server_id: ca1afvor03
   tasks:
@@ -26,11 +27,13 @@
   
 - name: install pip
   hosts: servers
+  gather_facts: true
   roles: 
   - pip
 
 - name: pip s3cmd
   hosts: servers
+  gather_facts: true
   tasks:
   - name: windows | install s3cmd from pip 
     command: \Python27\Scripts\pip.exe install s3cmd

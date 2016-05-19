@@ -2,8 +2,6 @@
 # Set-ExecutionPolicy Unrestricted
 # Then source this script by running:
 
-$save_dir=Resolve-Path ~/Downloads
-
 $client = New-Object System.Net.WebClient
 
 function InstallPythonMSI($installer) {
@@ -25,57 +23,23 @@ function download_file([string]$url, [string]$d) {
 	}
 }
 
-function get-python-ver($version) {
-	# Download Python indicated by version. For example:
-	#  > get-python-ver 3.4.0rc1
-	# or
-	#  > get-python-ver 2.7.6
 
-	$filename = 'python-' + $version + '.amd64.msi';
-	$save_path = '' + $save_dir + '\' + $filename;
-	if(!(Test-Path -pathType container $save_dir)) {
-		write-host -fore red $save_dir " does not exist";
-		exit;
-	}
-        
-	$url = 'http://www.python.org/ftp/python/' + $version.Substring(0,5) + '/' + $filename;
-	download_file $url $save_path
-	write-host "Installing Python"
-	InstallPythonMSI $save_path $target_dir
+$save_dir=Resolve-Path ~/Downloads
 
-	write-host "Add Python to the PATH"
-	[Environment]::SetEnvironmentVariable("Path", "$env:Path;C:\Python27\;C:\Python27\Scripts\", "User")
-}
+write-host "Installing Python"
+$msi_url = "https://www.python.org/ftp/python/2.7.11/python-2.7.11.msi"
+$save_path = '' + $save_dir + '\python-2.7.11.msi';
+download_file $msi_url $save_path
+InstallPythonMSI $save_path
 
-function get_setuptools {
-	write-host "Installing setuptools"
-	$setuptools_url = "https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py"
-	$ez_setup = '' + $save_dir + "\ez_setup.py"
-	download_file $setuptools_url $ez_setup
-	python $ez_setup
-}
+write-host "Add Python to the PATH"
+[Environment]::SetEnvironmentVariable("Path", "$env:Path;C:\Python27\;C:\Python27\Scripts\", "User")
 
-function get_pip {
-	write-host "Installing pip"
-	$setuptools_url = "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
-	$get_pip = '' + $save_dir + "\get_pip.py"
-	download_file $setuptools_url $get_pip
-	python $get_pip
-}
+write-host "Installing pip"
+$setuptools_url = "https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
+$save_path = '' + $save_dir + "\get_pip.py"
+download_file $setuptools_url save_path
+python $save_path
 
-get-python-ver 2.7.11
-get_pip
-
-
-
-
-#$client = new-object System.Net.WebClient
-#$client.DownloadFile("https://www.python.org/ftp/python/2.7.11/python-2.7.11.amd64.msi","\Users\Administrator\Downloads\python.msi")
-#
-#sleep 20
-#\users\Administrator\Downloads\python.msi /quiet
-#
-#sleep 20
-#\python27\Scripts\pip.exe install s3cmd
 
 exit 0
