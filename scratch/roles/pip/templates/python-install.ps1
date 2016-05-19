@@ -39,7 +39,7 @@ function get-python-ver($version) {
 	}
         
 	$url = 'http://www.python.org/ftp/python/' + $version.Substring(0,5) + '/' + $filename;
-	download-file $url $save_path
+	download_file $url $save_path
 	write-host "Installing Python"
 	InstallPythonMSI $save_path $target_dir
 
