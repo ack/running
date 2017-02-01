@@ -1,8 +1,6 @@
 ---
 - name: infra | setup
   hosts: localhost
-  vars:
-  - gid: 40257cae69c147fba6ee509c95e2808f
   tasks:
   - debug: msg="{{ network }}"
 
@@ -31,7 +29,7 @@
   #    publicip="{{ item.server.details.ipAddresses[-1]['public'] | d('') }}"
   #  with_items: fact_servers.results
 
-- #name: infra | setup
+  #name: infra | setup
   #hosts: localhost
   #tasks:
   #- name: suck
