@@ -28,4 +28,9 @@ fields:
   required: true
   type: networks
   detail: true
+- name: EULA
+  displayName: EULA
+  helpText: <a href="https://www.servergeneral.com/eula/" target="_blank">Read EULA</a>
+  type: text
+  required: true
 
