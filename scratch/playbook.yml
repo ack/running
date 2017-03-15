@@ -7,7 +7,7 @@
 
   - name: pull group
     clc_group_fact:
-      group_id: "{{ gid }}"
+      group_id: "{{ group }}"
     register: fact_group
 
   - name: pull servers
