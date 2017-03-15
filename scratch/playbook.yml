@@ -1,37 +1,42 @@
 ---
-- name: infra | setup
+- name: debug
   hosts: localhost
   tasks:
-  - debug: msg="{{ network }}"
+  - name: dump network
+    debug: msg='{{ network }}'
 
+  - name: pull group
+    clc_group_fact:
+      group_id: "{{ gid }}"
+    register: fact_group
 
+  - name: pull servers
+    clc_server_fact:
+      server_id: "{{ item }}"
+      credentials: true
+    with_items: fact_group.group.servers
+    register: fact_servers
 
+  - name: add to inventory
+    add_host:
+      groups=servers
+      name="{{ item.server.name }}"
+      ansible_ssh_user="{{ item.server.credentials.userName }}"
+      ansible_ssh_pass="{{ item.server.credentials.password }}"
+      ansible_ssh_host="{{ item.server.details.ipAddresses[-1]['internal'] }}"
+      publicip="{{ item.server.details.ipAddresses[-1]['public'] | d('') }}"
+    with_items: fact_servers.results
 
-  #- name: pull group
-  #  clc_group_fact:
-  #    group_id: "{{ gid }}"
-  #  register: fact_group
+  - name: dump group
+    debug: msg='{{ groups }}'
 
-  #- name: pull servers
-  #  clc_server_fact:
-  #    server_id: "{{ item }}"
-  #    credentials: true
-  #  with_items: fact_group.group.servers
-  #  register: fact_servers
+  - name: server ID and IP addresses
+    no_log: False
+    debug: msg="{{item}} {{hostvars[item].ansible_ssh_host}} {{hostvars[item].publicip}}"
+    with_flattened: groups['servers']
 
-  #- name: add to inventory
-  #  add_host:
-  #    groups=servers
-  #    name="{{ item.server.name }}"
-  #    ansible_ssh_user="{{ item.server.credentials.userName }}"
-  #    ansible_ssh_pass="{{ item.server.credentials.password }}"
-  #    ansible_ssh_host="{{ item.server.details.ipAddresses[-1]['internal'] }}"
-  #    publicip="{{ item.server.details.ipAddresses[-1]['public'] | d('') }}"
-  #  with_items: fact_servers.results
-
-  #name: infra | setup
-  #hosts: localhost
-  #tasks:
-  #- name: suck
-  #  debug: msg="{{ groups }}"
+- name: distributed
+  hosts: servers
+  tasks:
+  - debug: msg="{{name | d('wtf')}} {{ansible_ssh_host}} {{hostvars[inventory_hostname].publicip}}"
 
