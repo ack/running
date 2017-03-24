@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  tasks:
+  - clc_blueprint_package:
+     server_ids: ["{{ server_id }}"]
+     package_id: 77ab3844-579d-4c8d-8955-c69a94a2ba1a
+     package_params: {}
