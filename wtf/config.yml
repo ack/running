@@ -17,14 +17,9 @@ fields:
   displayName: Datacenter
   type: datacenters  
   required: true
-- name: group
-  displayName: Group
-  parent: dc
-  required: true
-  type: groups
 - name: server_id
   displayName: Servers
-  parent: group
+  parent: dc
   required: true
   type: servers
   detail: false
